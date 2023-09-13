@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "BackendApplication",
+            "request": "launch",
+            "mainClass": "com.example.SpringBootBackend.BackendApplication",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
+            "name": "BackendApplication",
+            "request": "launch",
+            "mainClass": "BackendApplication",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
+            "name": "BackendApplication",
+            "request": "launch",
+            "mainClass": "com.example.demo.BackendApplication",
+            "projectName": ""
+        },
+        "java.home"
+    ]
+}
