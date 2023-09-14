@@ -6,7 +6,7 @@ const port = 3000;
 app.use(cors());
 // Define a route that returns "Hello, World!"
 app.get('/hello', (req, res) => {
-  res.status(200).json({ status: 'Hello, World! KIA GANG 4 LIFE' });
+  res.status(200).json({ status: 'Hello, World!' });
 });
 
 app.listen(port, () => {
