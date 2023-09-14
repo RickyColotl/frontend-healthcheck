@@ -15,6 +15,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit() {
     this.fetchHealthStatus();
+    this.fetchData();
   }
 
   fetchHealthStatus() {
@@ -25,6 +26,18 @@ export class AppComponent implements OnInit{
       (error) => {
         console.error('Error:', error);
         this.healthStatus = 'Failed to fetch health status :(';
+      }
+    );
+  }
+  fetchData() {
+    this.http.get<any>('http://localhost:3000/hello').subscribe(
+      (response) => {
+        // Process and display data in the frontend
+        this.healthStatus = response.status;
+        console.log("Success connection to DataBase");
+      },
+      (error) => {
+        console.error('Error:', error);
       }
     );
   }
