@@ -1,0 +1,26 @@
+h1 {
+    background-color: red;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    
+  }
+h1 a{
+    text-decoration: none;
+    color: inherit;
+}
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  td {
+    background-color: lightblue;
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+  }
+  td a {
+    text-decoration: none;
+    color: inherit;
+  }
