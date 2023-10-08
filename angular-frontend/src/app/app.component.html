@@ -32,10 +32,16 @@
         <h2>Top 5 Actors</h2>
         <ul>
           <li *ngFor="let actor of topActors">
-            {{ actor.first_name }} {{ actor.last_name }} Number of Films: {{ actor.movie_count }}
+            <span (click)="selectActor(actor)">
+              {{ actor.first_name }} {{ actor.last_name }}
+            </span>
+            <div *ngIf="selectedActor === actor">
+              Number of Films: {{ actor.movie_count }}
+            </div>
           </li>
         </ul>
       </div>
+      
     
       <app-navigation></app-navigation>
       <router-outlet></router-outlet>  

@@ -13,6 +13,7 @@ export class AppComponent implements OnInit{
     topActors: any[] = [];
     showTopMovies: boolean = true;
     selectedMovie: any = null;
+    selectedActor: any = null;
 
     constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
     ngOnInit() {
@@ -73,5 +74,8 @@ export class AppComponent implements OnInit{
     }
     selectMovie(movie: any) {
       this.selectedMovie = this.selectedMovie === movie ? null : movie;
+    }
+    selectActor(actor: any) {
+      this.selectedActor = this.selectedActor === actor ? null : actor;
     }
 }
