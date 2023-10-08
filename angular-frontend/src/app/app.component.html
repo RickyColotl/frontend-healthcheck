@@ -28,8 +28,6 @@
         </ul>
       </div>
       
-      
-
       <div *ngIf="showTopMovies && topActors.length > 0">
         <h2>Top 5 Actors</h2>
         <ul>
@@ -38,11 +36,8 @@
           </li>
         </ul>
       </div>
-      
-
-          <app-navigation></app-navigation>
-           <router-outlet></router-outlet>
-           
-           
+    
+      <app-navigation></app-navigation>
+      <router-outlet></router-outlet>  
   </body>
 </html>

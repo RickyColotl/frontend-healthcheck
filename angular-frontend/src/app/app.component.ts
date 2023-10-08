@@ -72,7 +72,6 @@ export class AppComponent implements OnInit{
       );
     }
     selectMovie(movie: any) {
-      // Toggle the selected movie when it's clicked
       this.selectedMovie = this.selectedMovie === movie ? null : movie;
     }
 }
