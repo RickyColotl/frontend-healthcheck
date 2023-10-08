@@ -12,6 +12,7 @@ export class AppComponent implements OnInit{
     topMovies: any[] = [];
     topActors: any[] = [];
     showTopMovies: boolean = true;
+    selectedMovie: any = null;
 
     constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
     ngOnInit() {
@@ -69,5 +70,9 @@ export class AppComponent implements OnInit{
           console.error('Error:', error);
         }
       );
+    }
+    selectMovie(movie: any) {
+      // Toggle the selected movie when it's clicked
+      this.selectedMovie = this.selectedMovie === movie ? null : movie;
     }
 }
