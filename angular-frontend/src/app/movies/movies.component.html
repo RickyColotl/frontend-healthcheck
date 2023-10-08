@@ -12,14 +12,17 @@
         <h2>Movie:</h2>
         <ul>
           <li *ngFor="let movie of movies">
-            <h3>{{ movie.title }}</h3>
-            <p>{{ movie.description }}</p>
-            <p>Release Year: {{ movie.release_year }}</p>
-            <p>Rating: {{ movie.rating }}</p>
-            <p>Category: {{ movie.category }}</p>
+            <h3 (click)="selectMovie(movie)">{{ movie.title }}</h3>
+            <div *ngIf="selectedMovie === movie">
+              <p>{{ movie.description }}</p>
+              <p>Release Year: {{ movie.release_year }}</p>
+              <p>Rating: {{ movie.rating }}</p>
+              <p>Category: {{ movie.category }}</p>
+            </div>
           </li>
         </ul>
-    </div>
+      </div>
+      
     
   </body>
 </html>

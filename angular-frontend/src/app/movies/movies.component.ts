@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class MoviesComponent {
   searchTerm = '';
   movies: any[] = [];
+  selectedMovie: any = null;
 
   constructor(private http: HttpClient) {} 
 
@@ -21,5 +22,8 @@ export class MoviesComponent {
         console.error('Error fetching search results', error);
       }
     );
+  }
+  selectMovie(movie: any) {
+    this.selectedMovie = this.selectedMovie === movie ? null : movie;
   }
 }
