@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 const mysql = require('mysql');
+const router = express.Router();
 
 app.use(cors());
 
@@ -102,6 +103,7 @@ app.get('/search-movies', (req, res) => {
   // FIX SQL Query only works for Film Name
   const query1 = `
     SELECT
+      f.film_id,
       f.title,
       f.description,
       f.release_year,
@@ -124,3 +126,57 @@ app.get('/search-movies', (req, res) => {
     res.json(results);
   });
 });
+
+app.get('/rentMovie', (req, res) => {
+  const filmId = Number(req.query.filmId);
+  const customerId = Number(req.query.customerId);
+
+  console.log("HIT");
+  // 1. Validate filmId and customerId
+  if (!filmId || !customerId) {
+      return res.status(400).json({ error: 'filmId and customerId are required.' });
+  }
+
+  // 2. Check if film is available for rent
+  const checkAvailabilityQuery = `
+    SELECT inventory_id
+    FROM inventory
+    WHERE film_id = ? 
+    AND inventory_id NOT IN (SELECT inventory_id FROM rental WHERE return_date IS NULL)
+    LIMIT 1;
+  `;
+
+  con.query(checkAvailabilityQuery, [filmId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error.' });
+    }
+
+    if (results.length === 0) {
+      return res.status(400).json({ error: 'Film is not available for rent.' });
+    }
+
+    const inventoryId = results[0].inventory_id;
+
+    const insertRentalQuery = `
+      INSERT INTO rental(rental_date, inventory_id, customer_id, staff_id)
+      VALUES(NOW(), ?, ?, 1);
+    `;
+
+    con.query(insertRentalQuery, [inventoryId, customerId], (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error.' });
+      }
+      // After successfully inserting
+      res.status(200).json({ 
+        message: 'Film rented successfully!', 
+        rental: {
+          filmId: filmId,
+          customerId: customerId,
+          rentalDate: new Date()
+        } 
+      });
+    });
+  });
+});
+
+  
