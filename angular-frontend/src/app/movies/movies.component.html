@@ -18,6 +18,7 @@
               <p>Release Year: {{ movie.release_year }}</p>
               <p>Rating: {{ movie.rating }}</p>
               <p>Category: {{ movie.category }}</p>
+              <button (click)="rentMovie(movie.film_id)" class="rent-out">Rent Out</button>
             </div>
           </li>
         </ul>
