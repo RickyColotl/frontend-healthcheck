@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CustomersComponent {
   searchResults: any[] = [];
+  customer: any[] = [];
   searchTerm : string = '';
   newCustomer = {
     firstName: '',
@@ -15,6 +16,7 @@ export class CustomersComponent {
     email: '',
     address_id: ''
    };
+  selectedCustomer : any | null = null;
 
   constructor(private http: HttpClient) {} 
 
@@ -41,5 +43,37 @@ export class CustomersComponent {
           console.error('Error adding customer:', error);
         }
       );
+  }
+
+  editInfo(customer: any) {
+    this.selectedCustomer = { ...customer };  // Populate form
+  }
+
+  updateCustomer() {
+    const dataToSend = {
+      customerId: this.selectedCustomer.customer_id,
+      firstName: this.selectedCustomer.firstName,
+      lastName: this.selectedCustomer.lastName,
+      email: this.selectedCustomer.email,
+      address_id: this.selectedCustomer.address_id
+  };
+    this.http.put<any>('http://localhost:3000/editCustomer', dataToSend)
+        .subscribe(
+            (response) => {
+                alert(response.message);
+                const index = this.customer.findIndex(c => c.customer_id === this.selectedCustomer.customer_id);
+                this.customer[index] = { ...this.selectedCustomer };
+                this.selectedCustomer = null;
+            },
+            (error) => {
+                console.error('Error updating customer:', error);
+            }
+        );
+}
+  deleteCustomer(customer: any) {
+    if (confirm(`Are you sure you want to delete ${customer.firstName} ${customer.lastName}?`)) {
+      // Send DELETE request to backend
+      // After successful deletion, remove the customer from the customers array
+    }
   }
 }
