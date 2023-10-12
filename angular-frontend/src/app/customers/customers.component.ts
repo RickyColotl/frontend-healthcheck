@@ -102,4 +102,17 @@ export class CustomersComponent {
       console.error("Failed to fetch rentals:", error);
     });
   }
+
+  markAsReturned(rental: any) {
+    if (!rental.return_date) {  // Only if the movie hasn't been returned yet
+      this.http.put<any>(`http://localhost:3000/returnRental/${rental.rental_id}`, {})
+        .subscribe(response => {
+          alert(response.message);
+          rental.return_date = new Date().toISOString();  // Mark as returned instantly(frontend)
+        }, error => {
+          console.error('Error marking as returned:', error);
+        });
+    }
+  }
+
 }

@@ -218,7 +218,7 @@ app.get('/customerRentals/:customerId', (req, res) => {
   console.log("Fetching rentals for customer ID:", customerId);
   const getCustomerRentalsQuery = `
   SELECT
-      c.customer_id, c.first_name, c.last_name, f.title, r.rental_date, r.return_date
+      c.customer_id, r.rental_id, c.first_name, c.last_name, f.title, r.rental_date, r.return_date
   FROM
       customer c
   JOIN rental r ON c.customer_id = r.customer_id
@@ -234,5 +234,21 @@ app.get('/customerRentals/:customerId', (req, res) => {
 
       console.log("Fetched rentals:", results);
       res.json(results);
+  });
+});
+
+app.put('/returnRental/:rentalId', (req, res) => {
+  const rentalId = req.params.rentalId;
+  const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const returnRentalQuery = `
+      UPDATE rental
+      SET return_date = ?
+      WHERE rental_id = ?;
+  `;
+  con.query(returnRentalQuery, [currentDate, rentalId], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: 'Database error.' });
+      }
+      res.json({ message: 'Movie marked as returned!' });
   });
 });

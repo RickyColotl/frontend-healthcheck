@@ -74,6 +74,7 @@
             <ul>
             <li *ngFor="let rental of rentals">
                 {{ rental.title }} (Rented on: {{ rental.rental_date}})
+                <button *ngIf="!rental.return_date" (click)="markAsReturned(rental)">Mark as Returned</button>
             </li>
             </ul>
         </div>
