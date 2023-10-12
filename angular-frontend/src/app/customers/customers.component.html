@@ -45,40 +45,43 @@
             </div>
             </form>
         </div>
-
-        <div *ngIf="selectedCustomer">
-            <h2>Edit Customer</h2>
-            <form (submit)="updateCustomer()">
-                <div>
-                    <label>First Name:</label>
-                    <input type="text" [(ngModel)]="selectedCustomer.firstName" name="firstName" required>
-                </div>
-                <div>
-                    <label>Last Name:</label>
-                    <input type="text" [(ngModel)]="selectedCustomer.lastName" name="lastName" required>
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input type="email" [(ngModel)]="selectedCustomer.email" name="email" required>
-                </div>
-                <div>
-                    <label>Address ID:</label>
-                    <input type="text" [(ngModel)]="selectedCustomer.address_id" name="address_id" required>
-                </div>
-                <button type="submit">Save Changes</button>
-            </form>
+        <div *ngIf="isEditing">
+            <div *ngIf="selectedCustomer">
+                <h2>Edit Customer</h2>
+                <form (submit)="updateCustomer()">
+                    <div>
+                        <label>First Name:</label>
+                        <input type="text" [(ngModel)]="selectedCustomer.firstName" name="firstName" required>
+                    </div>
+                    <div>
+                        <label>Last Name:</label>
+                        <input type="text" [(ngModel)]="selectedCustomer.lastName" name="lastName" required>
+                    </div>
+                    <div>
+                        <label>Email:</label>
+                        <input type="email" [(ngModel)]="selectedCustomer.email" name="email" required>
+                    </div>
+                    <div>
+                        <label>Address ID:</label>
+                        <input type="text" [(ngModel)]="selectedCustomer.address_id" name="address_id" required>
+                    </div>
+                    <button type="submit">Save Changes</button>
+                    <button (click)="closeEditing()">Cancel Editing</button>
+                </form>
+            </div>
         </div>
-
-        <div *ngIf="rentals.length">
-            <h3>Rentals for {{ selectedCustomer?.first_name }} {{ selectedCustomer?.last_name }}:</h3>
-            <ul>
-            <li *ngFor="let rental of rentals">
-                {{ rental.title }} (Rented on: {{ rental.rental_date}})
-                <button *ngIf="!rental.return_date" (click)="markAsReturned(rental)">Mark as Returned</button>
-            </li>
-            </ul>
+        <div *ngIf="isViewingRentals">
+            <div *ngIf="rentals.length">
+                <h3>Rentals for {{ selectedCustomer?.first_name }} {{ selectedCustomer?.last_name }}:</h3>
+                <ul>
+                <li *ngFor="let rental of rentals">
+                    {{ rental.title }} (Rented on: {{ rental.rental_date}})
+                    <button *ngIf="!rental.return_date" (click)="markAsReturned(rental)">Mark as Returned</button>
+                </li>
+                </ul>
+                <button (click)="closeViewingRentals()">Close Rentals View</button>
+            </div>
         </div>
         
-    
     </body>
 </html>

@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./customers.component.css']
 })
 export class CustomersComponent {
+  isEditing: boolean = false;
+  isViewingRentals: boolean = false;
   searchResults: any[] = [];
   customer: any[] = [];
   searchTerm : string = '';
@@ -47,6 +49,8 @@ export class CustomersComponent {
   }
 
   editInfo(customer: any) {
+    this.isEditing = true;
+    this.isViewingRentals = false;
     this.selectedCustomer = { ...customer };  // Populate form
   }
 
@@ -90,6 +94,8 @@ export class CustomersComponent {
     }
   }
   loadRentalsForCustomer(customer: any) {
+    this.isViewingRentals = true;
+    this.isEditing = false;
     this.selectedCustomer = customer;
     if (!this.selectedCustomer) {
       console.error("No customer selected");
@@ -113,6 +119,16 @@ export class CustomersComponent {
           console.error('Error marking as returned:', error);
         });
     }
+  }
+
+  closeEditing() {
+    this.isEditing = false;
+    this.selectedCustomer = null;
+  }
+
+  closeViewingRentals() {
+    this.isViewingRentals = false;
+    this.rentals = [];
   }
 
 }
