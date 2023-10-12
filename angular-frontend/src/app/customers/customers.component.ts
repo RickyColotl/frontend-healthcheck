@@ -17,6 +17,7 @@ export class CustomersComponent {
     address_id: ''
    };
   selectedCustomer : any | null = null;
+  rentals: any[] = [];
 
   constructor(private http: HttpClient) {} 
 
@@ -87,5 +88,18 @@ export class CustomersComponent {
           }
         );
     }
+  }
+  loadRentalsForCustomer(customer: any) {
+    this.selectedCustomer = customer;
+    if (!this.selectedCustomer) {
+      console.error("No customer selected");
+      return;
+    }
+    this.http.get<any[]>(`http://localhost:3000/customerRentals/${customer.customer_id}`)
+    .subscribe(data => {
+        this.rentals = data;
+    }, error => {
+      console.error("Failed to fetch rentals:", error);
+    });
   }
 }

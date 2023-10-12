@@ -212,3 +212,27 @@ app.delete('/deleteCustomer/:customerId', (req, res) => {
       res.json({ message: 'Customer deleted successfully!' });
   });
 });
+
+app.get('/customerRentals/:customerId', (req, res) => {
+  const customerId = req.params.customerId;
+  console.log("Fetching rentals for customer ID:", customerId);
+  const getCustomerRentalsQuery = `
+  SELECT
+      c.customer_id, c.first_name, c.last_name, f.title, r.rental_date, r.return_date
+  FROM
+      customer c
+  JOIN rental r ON c.customer_id = r.customer_id
+  JOIN inventory i ON r.inventory_id = i.inventory_id
+  JOIN film f ON i.film_id = f.film_id
+  WHERE
+      c.customer_id = ?;
+  `;
+  con.query(getCustomerRentalsQuery, [customerId], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: 'Database error.' });
+      }
+
+      console.log("Fetched rentals:", results);
+      res.json(results);
+  });
+});

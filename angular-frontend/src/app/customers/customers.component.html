@@ -17,6 +17,7 @@
             <p>Address ID: {{ customer.address_id }}</p>
             <button (click)="editInfo(customer)">Edit</button>
             <button (click)="deleteCustomer(customer)">Delete</button>
+            <button (click)="loadRentalsForCustomer(customer)">View Rentals</button>
             </div>
         </div>
         
@@ -67,6 +68,16 @@
                 <button type="submit">Save Changes</button>
             </form>
         </div>
+
+        <div *ngIf="rentals.length">
+            <h3>Rentals for {{ selectedCustomer?.first_name }} {{ selectedCustomer?.last_name }}:</h3>
+            <ul>
+            <li *ngFor="let rental of rentals">
+                {{ rental.title }} (Rented on: {{ rental.rental_date}})
+            </li>
+            </ul>
+        </div>
+        
     
     </body>
 </html>
