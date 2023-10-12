@@ -180,3 +180,18 @@ app.post('/addCustomer', (req, res) => {
       res.json({ message: 'Customer added successfully!', customerId: results.insertId });
   });
 });
+
+app.put('/editCustomer', (req, res) => {
+  const { customerId, firstName, lastName, email, address_id } = req.body;
+  const updateCustomerQuery = `
+      UPDATE customer 
+      SET first_name = ?, last_name = ?, email = ?, address_id = ?
+      WHERE customer_id = ?;
+  `;
+  con.query(updateCustomerQuery, [firstName, lastName, email, address_id, customerId], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: 'Database error.' });
+      }
+      res.json({ message: 'Customer updated successfully!' });
+  });
+});
