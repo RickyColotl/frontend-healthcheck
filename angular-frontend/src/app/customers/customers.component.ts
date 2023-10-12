@@ -71,9 +71,21 @@ export class CustomersComponent {
         );
 }
   deleteCustomer(customer: any) {
-    if (confirm(`Are you sure you want to delete ${customer.firstName} ${customer.lastName}?`)) {
-      // Send DELETE request to backend
-      // After successful deletion, remove the customer from the customers array
+    console.log(customer);
+    if (confirm(`Are you sure you want to delete ${customer.first_name} ${customer.last_name}?`)) {
+        this.http.delete<any>(`http://localhost:3000/deleteCustomer/${customer.customer_id}`)
+            .subscribe(
+                (response) => {
+                    alert(response.message);
+                    const index = this.searchResults.findIndex(c => c.customer_id === customer.customer_id);
+                    if (index > -1) {
+                        this.searchResults.splice(index, 1);
+                    }
+                },
+                (error) => {
+                    console.error('Error deleting customer:', error);
+                }
+            );
     }
   }
 }

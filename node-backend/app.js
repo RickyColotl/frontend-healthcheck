@@ -195,3 +195,20 @@ app.put('/editCustomer', (req, res) => {
       res.json({ message: 'Customer updated successfully!' });
   });
 });
+
+app.delete('/deleteCustomer/:customerId', (req, res) => {
+  const customerId = req.params.customerId;
+  const deleteCustomerQuery = `
+      DELETE FROM customer WHERE customer_id = ?;
+  `;
+  con.query(deleteCustomerQuery, [customerId], (err, results) => {
+      if (err) {
+          console.log("Unable to Delete Customer, they have rentals out");
+          return res.status(500).json({ error: 'Database error.' });
+      }
+      if (results.affectedRows === 0) {
+          return res.status(404).json({ message: 'Customer not found.' });
+      }
+      res.json({ message: 'Customer deleted successfully!' });
+  });
+});
