@@ -1,1 +1,47 @@
-<p>customers</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head> 
+        <link rel ="stylesheet" href="customers.component.css">
+    </head>
+    <body>
+        <div class="search-container">
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Search by ID, First Name or Last Name">
+            <button (click)="searchCustomers()">Search</button>
+        </div>
+        
+        <div class="results-container">
+            <div *ngFor="let customer of searchResults">
+            <h3>{{ customer.first_name }} {{ customer.last_name }}</h3>
+            <p>Email: {{ customer.email }}</p>
+            <p>Customer ID: {{ customer.customer_id }}</p>
+            <p>Address ID: {{ customer.address_id }}</p>
+            </div>
+        </div>
+        
+        <div class="add-customer-container">
+            <h2>Add New Customer</h2>
+            <form (submit)="addCustomer()">
+            <div>
+                <label>First Name:</label>
+                <input type="text" [(ngModel)]="newCustomer.firstName" name="firstName" required>
+            </div>
+            <div>
+                <label>Last Name:</label>
+                <input type="text" [(ngModel)]="newCustomer.lastName" name="lastName" required>
+            </div>
+            <div>
+                <label>Email:</label>
+                <input type="email" [(ngModel)]="newCustomer.email" name="email" required>
+            </div>
+            <div>
+                <label>Address Id:</label>
+                <input type="text" [(ngModel)]="newCustomer.address_id" name="address_id" required>
+            </div>
+            <div>
+                <button type="submit">Add Customer</button>
+            </div>
+            </form>
+        </div>
+    
+    </body>
+</html>

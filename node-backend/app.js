@@ -4,19 +4,17 @@ const app = express();
 const port = 3000;
 const mysql = require('mysql');
 const router = express.Router();
-
 app.use(cors());
-
+app.use(express.json());
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
 
 const con = mysql.createConnection({
   host: 'localhost',//"sql1.njit.edu"
   user: 'root',
   password: 'December7350',
-  port: 3306,//check this out
+  port: 3306,
   database: 'sakila'
 });
 
@@ -41,22 +39,13 @@ app.get('/hello', (req, res) => {
 
 app.get('/top-movies', (req, res) => {
   const query1 = `
-  SELECT
-  f.title,
-  f.description,
-  f.release_year,
-  f.rating,
-  COUNT(*) AS rented
-  FROM
-    film AS f
+  SELECT f.title, f.description, f.release_year, f.rating, COUNT(*) AS rented
+  FROM film AS f
   JOIN inventory AS i ON f.film_id = i.film_id
   JOIN rental AS r ON i.inventory_id = r.inventory_id
-  GROUP BY
-    f.film_id
-  ORDER BY
-    rented DESC
+  GROUP BY f.film_id
+  ORDER BY rented DESC
   LIMIT 5;
-
   `;
   con.query(query1, (err, results) => {
     if (err) {
@@ -70,21 +59,13 @@ app.get('/top-movies', (req, res) => {
 
 app.get('/top-actors', (req, res) => {
   const query1 = `
-  SELECT 
-    a.actor_id,
-    a.first_name,
-    a.last_name,
-    COUNT(DISTINCT fa.film_id) AS movie_count
-  FROM
-    actor a
+  SELECT a.actor_id, a.first_name, a.last_name, COUNT(DISTINCT fa.film_id) AS movie_count
+  FROM actor a
   JOIN film_actor fa ON a.actor_id = fa.actor_id
   JOIN inventory i ON i.film_id = fa.film_id
-  WHERE 
-    i.store_id = 1
-  GROUP BY 
-    a.actor_id, a.first_name, a.last_name
-  ORDER BY
-    movie_count DESC, a.actor_id
+  WHERE i.store_id = 1
+  GROUP BY a.actor_id, a.first_name, a.last_name
+  ORDER BY movie_count DESC, a.actor_id
   LIMIT 5;
   `;
   con.query(query1, (err, results) => {
@@ -102,19 +83,11 @@ app.get('/search-movies', (req, res) => {
   
   // FIX SQL Query only works for Film Name
   const query1 = `
-    SELECT
-      f.film_id,
-      f.title,
-      f.description,
-      f.release_year,
-      f.rating,
-      c.name AS category
-    FROM
-      film f
+    SELECT f.film_id, f.title, f.description, f.release_year, f.rating, c.name AS category
+    FROM film f
     JOIN film_category fc ON f.film_id = fc.film_id
     JOIN category c ON fc.category_id = c.category_id
-    WHERE
-      f.title LIKE ?
+    WHERE f.title LIKE ?
     `;
     const values = [`%${searchTerm}%`];
 
@@ -131,7 +104,6 @@ app.get('/rentMovie', (req, res) => {
   const filmId = Number(req.query.filmId);
   const customerId = Number(req.query.customerId);
 
-  console.log("HIT");
   // 1. Validate filmId and customerId
   if (!filmId || !customerId) {
       return res.status(400).json({ error: 'filmId and customerId are required.' });
@@ -179,4 +151,32 @@ app.get('/rentMovie', (req, res) => {
   });
 });
 
-  
+app.get('/searchCustomers', (req, res) => {
+  const searchTerm = `%${req.query.term}%`; 
+  const query = `
+      SELECT customer_id, first_name, last_name, email, address_id
+      FROM customer
+      WHERE customer_id LIKE ? OR first_name LIKE ? OR last_name LIKE ?;
+  `;
+  con.query(query, [searchTerm, searchTerm, searchTerm, searchTerm], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: 'Database error.' });
+      }
+      res.json(results);
+  });
+});
+
+app.post('/addCustomer', (req, res) => {
+  const { firstName, lastName, email, address_id } = req.body;
+  console.log(req.body);
+  const insertCustomerQuery = `
+      INSERT INTO customer(store_id, first_name, last_name, email, address_id, create_date)
+      VALUES (1, ?, ?, ?, ?, NOW());
+  `;  // Note: store_id hard-coded as 1
+  con.query(insertCustomerQuery, [firstName, lastName, email, address_id], (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: 'Database error.' });
+      }
+      res.json({ message: 'Customer added successfully!', customerId: results.insertId });
+  });
+});
